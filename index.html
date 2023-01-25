@@ -22,7 +22,8 @@
     <title>Roleplay Database</title>
   </head>
   <body>
-    <section class="card-container">
+    <!-- Card container -->
+    <section class="card-container" id="card-container">
       <div class="char-card">
         <input type="text" placeholder="Character name" class="pc-name" />
         <div class="card-line"></div>
@@ -62,172 +63,53 @@
               <p style="font-size: 15px">Long ass description goes here</p>
             </li>
           </ul>
+          <button class="card-delete">DELETE</button>
         </div>
       </div>
-      <!-- Delete all cards from here -->
-      <div class="char-card">
-        <input type="text" placeholder="Character name" class="pc-name" />
-        <div class="card-line"></div>
-        <p class="card-header">Main info</p>
-        <div class="main-info">
-          <div>
-            <label for="char_num">Currency</label>
-            <input type="number" id="char_num" />
-          </div>
-          <div>
-            <label for="char_lives">Lives</label>
-            <input type="number" id="char_lives" value="10" />
-          </div>
-        </div>
-        <div>
-          <p class="card-header">Inventory</p>
-          <ul class="inventory">
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-          </ul>
-        </div>
+    </section>
+
+    <!-- Second section -->
+    <section class="second-container">
+      <!-- Random buttons -->
+      <div class="rnd-buttons">
+        <button
+          style="background-image: url('./img/coin.png')"
+          onclick="randomize(2, 'coin-btn')"
+          id="coin-btn"
+        >
+          Coin
+        </button>
+        <button
+          style="background-image: url('./img/d6.png')"
+          onclick="randomize(6, 'd6-btn')"
+          id="d6-btn"
+        >
+          6
+        </button>
+        <button
+          style="background-image: url('./img/d20.png')"
+          onclick="randomize(20, 'd20-btn')"
+          id="d20-btn"
+        >
+          20
+        </button>
       </div>
-      <div class="char-card">
-        <input type="text" placeholder="Character name" class="pc-name" />
-        <div class="card-line"></div>
-        <p class="card-header">Main info</p>
-        <div class="main-info">
-          <div>
-            <label for="char_num">Currency</label>
-            <input type="number" id="char_num" />
-          </div>
-          <div>
-            <label for="char_lives">Lives</label>
-            <input type="number" id="char_lives" value="10" />
-          </div>
-        </div>
-        <div>
-          <p class="card-header">Inventory</p>
-          <ul class="inventory">
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="char-card">
-        <input type="text" placeholder="Character name" class="pc-name" />
-        <div class="card-line"></div>
-        <p class="card-header">Main info</p>
-        <div class="main-info">
-          <div>
-            <label for="char_num">Currency</label>
-            <input type="number" id="char_num" />
-          </div>
-          <div>
-            <label for="char_lives">Lives</label>
-            <input type="number" id="char_lives" value="10" />
-          </div>
-        </div>
-        <div>
-          <p class="card-header">Inventory</p>
-          <ul class="inventory">
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-          </ul>
-        </div>
-      </div>
-      <div class="char-card">
-        <input type="text" placeholder="Character name" class="pc-name" />
-        <div class="card-line"></div>
-        <p class="card-header">Main info</p>
-        <div class="main-info">
-          <div>
-            <label for="char_num">Currency</label>
-            <input type="number" id="char_num" />
-          </div>
-          <div>
-            <label for="char_lives">Lives</label>
-            <input type="number" id="char_lives" value="10" />
-          </div>
-        </div>
-        <div>
-          <p class="card-header">Inventory</p>
-          <ul class="inventory">
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-            <li>
-              <div>
-                <p>Item name</p>
-                <input type="number" />
-              </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
-            </li>
-          </ul>
-        </div>
+      <!-- Item list -->
+      <div>
+        <ul class="item-list">
+          <li>
+            <p>Item name</p>
+            <p>Long ass description goes here</p>
+          </li>
+          <li>
+            <p>Item name</p>
+            <p>Long ass description goes here</p>
+          </li>
+          <li>
+            <p>Item name</p>
+            <p>Long ass description goes here</p>
+          </li>
+        </ul>
       </div>
     </section>
 

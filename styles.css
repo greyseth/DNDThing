@@ -269,6 +269,7 @@ header button:active {
   background-color: #eac435;
   display: flex;
   flex-direction: column;
+  gap: 10px;
   justify-content: center;
   align-items: center;
   padding: 15px 20px;

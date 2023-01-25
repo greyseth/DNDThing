@@ -22,6 +22,12 @@
     <title>Roleplay Database</title>
   </head>
   <body>
+    <!-- Header controls -->
+    <header>
+      <button>Save</button>
+      <button>Add new character</button>
+    </header>
+
     <!-- Card container -->
     <section class="card-container" id="card-container">
       <div class="char-card">
@@ -95,22 +101,39 @@
         </button>
       </div>
       <!-- Item list -->
-      <div>
-        <p>Available items list</p>
+      <div class="item-list-container">
         <ul class="item-list">
           <li>
             <p class="item-name">Item name</p>
             <p>Long ass description goes here</p>
+            <button>Give</button>
           </li>
           <li>
             <p class="item-name">Item name</p>
             <p>Long ass description goes here</p>
+            <button>Give</button>
           </li>
           <li>
             <p class="item-name">Item name</p>
             <p>Long ass description goes here</p>
+            <button>Give</button>
           </li>
         </ul>
+      </div>
+    </section>
+
+    <!-- Item management -->
+    <section>
+      <div class="item-man-container">
+        <div class="item-add">
+          <input type="text" placeholder="Item name" />
+          <input type="text" placeholder="Item description" />
+          <button>Add item</button>
+        </div>
+        <div class="item-give">
+          <label for="give-amount">Item give amount</label>
+          <input type="number" id="give-amount" />
+        </div>
       </div>
     </section>
 

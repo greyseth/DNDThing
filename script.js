@@ -23,6 +23,18 @@ let players = [
       },
     ],
   },
+  {
+    name: "test",
+    cur: 15,
+    lives: 7,
+    inv: [
+      {
+        name: "other thing",
+        desc: "this is a different thing",
+        amount: 3,
+      },
+    ],
+  },
 ];
 
 let items = [
@@ -75,10 +87,10 @@ function createCards() {
         </div>
         <div>
           <p class="card-header">Inventory</p>
-          <ul class="inventory" id="${el.name}_inv">
+          <ul class="inventory" id="${el.name}_card_items">
             ${itemHTML}
           </ul>
-          <button class="card-delete" onclick="${el.name}">DELETE</button>
+          <button class="card-delete" onclick="removeMember('${el.name}')">DELETE</button>
         </div>
       </div>
     `;
@@ -94,10 +106,13 @@ createCards();
 function createItems() {
   items.forEach(function (el) {
     const itemAdd = `
-    <li>
+    <li id="${el.name}_item">
       <p class="item-name">${el.name}</p>
       <p>${el.desc}</p>
-      <button onclick="giveItem(${el.name})">Give</button>
+      <div>
+      <button onclick="giveItem('${el.name}')">Give</button>
+      <button onclick="removeItem('${el.name}')">Remove</button>
+      </div>      
     </li> 
     `;
 
@@ -107,24 +122,34 @@ function createItems() {
   });
 }
 
-function updateItems(player) {
-  const char = players.find((f) => f.name === player);
-}
-
 createItems();
 
 function giveItem(itemName) {
   const player = players.find(
     (f) => f.name === document.getElementById("receiver").value
   );
-  const item = items.find((f) => itemName);
+  const item = items.find((f) => f.name === itemName);
   const amount = document.getElementById("give-amount").value;
 
-  if (player.inv.find((f) => f.name === itemName)) {
-    player.inv.find((f) => f.name === itemName).amount += amount;
-  } else {
-    player.inv.push({ name: item.name, desc: item.desc, amount: amount });
-  }
+  const htmlAdd = `
+  <li>
+    <div>
+      <p>${item.name}</p>
+      <input type="number" id="${player.name}_card_items_${item.name}">
+    </div>
+    <div>
+      <p style="font-size: 15px">${item.desc}</p>
+      <button class="item-remove-button">Remove</button>
+    </div>
+  </li>
+  `;
+
+  //DOM manipulation
+  document
+    .getElementById(`${player.name}_card_items`)
+    .insertAdjacentHTML("afterbegin", htmlAdd);
+
+  //Local data save
 }
 
 function randomize(maxNum, id) {
@@ -134,12 +159,51 @@ function randomize(maxNum, id) {
 
 function addMember() {}
 
-function removeMember(id) {}
+function removeMember(name) {
+  document.getElementById(`${name}_card`).remove();
 
-// function giveItem(itemName) {
-//   const receiver = document.getElementById('receiver').value;
-//   const amount = document.getElementById('give-amount').value;
+  players.splice(players.findIndex((f) => f.name === name));
+}
 
-//   const sel = players.find((el) => el.name === receiver);
-//   sel.inv.push()
-// }
+function removeItem(name) {
+  document.getElementById(`${name}_item`).remove();
+
+  items.splice(items.findIndex((f) => f.name === name));
+}
+
+//#region valueUpdate
+
+function changeName(target, value) {
+  players.find((f) => f.name === target).name = value;
+}
+
+function changeCur(target, value) {
+  players.find((f) => f.name === target).name = value;
+}
+
+//#endregion
+
+function addItem() {
+  const name = document.getElementById("add-item-name");
+  const desc = document.getElementById("add-item-desc");
+
+  //DOM manipulation
+  const html = `
+  <li id="${name.value}_item">
+      <p class="item-name">${name.value}</p>
+      <p>${desc.value}</p>
+      <div>
+      <button onclick="giveItem('${name.value}')">Give</button>
+      <button onclick="removeItem('${name.value}')">Remove</button>
+      </div>      
+    </li> 
+  `;
+
+  document.getElementById("item-list").insertAdjacentHTML("afterbegin", html);
+
+  //Array modification
+  items.push({ name: name.value, desc: desc.value });
+
+  name.value = "";
+  desc.value = "";
+}

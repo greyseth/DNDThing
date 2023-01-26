@@ -30,7 +30,7 @@
 
     <!-- Card container -->
     <section class="card-container" id="card-container">
-      <div class="char-card">
+      <div class="char-card" id="test_card">
         <input type="text" placeholder="Character name" class="pc-name" />
         <div class="card-line"></div>
         <p class="card-header">Main info</p>
@@ -46,13 +46,16 @@
         </div>
         <div>
           <p class="card-header">Inventory</p>
-          <ul class="inventory">
-            <li>
+          <ul class="inventory" id="test_card_items">
+            <li id="test_card_items_item">
               <div>
                 <p>Item name</p>
                 <input type="number" />
               </div>
-              <p style="font-size: 15px">Long ass description goes here</p>
+              <div>
+                <p style="font-size: 15px">Long ass description goes here</p>
+                <button class="item-remove-button">Remove</button>
+              </div>
             </li>
             <li>
               <div>
@@ -69,7 +72,9 @@
               <p style="font-size: 15px">Long ass description goes here</p>
             </li>
           </ul>
-          <button class="card-delete">DELETE</button>
+          <button class="card-delete" onclick="removeMember('test')">
+            DELETE
+          </button>
         </div>
       </div>
     </section>
@@ -103,10 +108,13 @@
       <!-- Item list -->
       <div class="item-list-container">
         <ul class="item-list" id="item-list">
-          <li>
+          <li id="test_item">
             <p class="item-name">Item name</p>
             <p>Long ass description goes here</p>
-            <button>Give</button>
+            <div>
+              <button>Give</button>
+              <button onclick="removeItem('test')">Remove</button>
+            </div>
           </li>
         </ul>
       </div>
@@ -116,9 +124,13 @@
     <section>
       <div class="item-man-container">
         <div class="item-add">
-          <input type="text" placeholder="Item name" />
-          <input type="text" placeholder="Item description" />
-          <button>Add item</button>
+          <input type="text" placeholder="Item name" id="add-item-name" />
+          <input
+            type="text"
+            placeholder="Item description"
+            id="add-item-desc"
+          />
+          <button onclick="addItem()">Add item</button>
         </div>
         <div class="item-give">
           <label for="give-amount">Item give receiver/amount</label>

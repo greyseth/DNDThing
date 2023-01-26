@@ -283,3 +283,20 @@ header button:active {
   padding: 5px 0px;
   font-size: 15px;
 }
+
+.item-remove-button {
+  background-color: red;
+  color: white;
+  border-radius: 5px;
+  border: black solid 2px;
+  transition: 0.5s;
+}
+
+.item-remove-button:hover {
+  transform: scale(110%);
+  cursor: pointer;
+}
+
+.item-remove-button:active {
+  color: black;
+}

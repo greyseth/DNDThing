@@ -7,7 +7,6 @@ let players = [
       {
         name: "this thing",
         desc: "this is a something",
-        amount: 2,
       },
     ],
   },
@@ -19,7 +18,6 @@ let players = [
       {
         name: "other thing",
         desc: "this is a different thing",
-        amount: 3,
       },
     ],
   },
@@ -31,7 +29,6 @@ let players = [
       {
         name: "other thing",
         desc: "this is a different thing",
-        amount: 3,
       },
     ],
   },
@@ -52,18 +49,24 @@ let items = [
   },
 ];
 
+const defaultLives = 10;
+let lastIndex = 0;
+
 function createCards() {
   players.forEach(function (el) {
     let itemHTML = ``;
 
     el.inv.forEach(function (item) {
       let itemAdd = `
-      <li>
+      <li id="${el.name}_card_items_${item.name}">
           <div>
             <p>${item.name}</p>
-            <input type="number" value="${item.amount}"/>
           </div>
-          <p style="font-size: 15px">${item.desc}</p>
+          <div>
+            <p style="font-size: 15px">${item.desc}</p>
+            <button class="item-remove-button" onclick="removePlayerItem('${el.name}', '${item.name}')"
+            id="${el.name}_card_items_${item.name}_del">Remove</button>
+          </div>
         </li>
       `;
 
@@ -72,17 +75,18 @@ function createCards() {
 
     const card = `
     <div class="char-card" id="${el.name}_card">
-        <input type="text" placeholder="Character name" class="pc-name" value="${el.name}" />
+        <input type="text" placeholder="Character name" class="pc-name" value="${el.name}" id="${el.name}_card_name"
+        onchange="updateName('${el.name}')"/>
         <div class="card-line"></div>
         <p class="card-header">Main info</p>
         <div class="main-info">
           <div>
-            <label for="char_num">Currency</label>
-            <input type="number" id="char_num" value="${el.cur}"/>
+            <label for="${el.name}_card_cur">Currency</label>
+            <input type="number" id="${el.name}_card_cur" value="${el.cur}" onchange="updateCur('${el.name}')"/>
           </div>
           <div>
-            <label for="char_lives">Lives</label>
-            <input type="number" id="char_lives" value="${el.lives}" />
+            <label for="${el.name}_card_lives">Lives</label>
+            <input type="number" id="${el.name}_card_lives" value="${el.lives}" onchange="updateLives('${el.name}')/>
           </div>
         </div>
         <div>
@@ -90,7 +94,7 @@ function createCards() {
           <ul class="inventory" id="${el.name}_card_items">
             ${itemHTML}
           </ul>
-          <button class="card-delete" onclick="removeMember('${el.name}')">DELETE</button>
+          <button class="card-delete" onclick="removeMember('${el.name}')" id="${el.name}_card_delete">DELETE</button>
         </div>
       </div>
     `;
@@ -132,24 +136,27 @@ function giveItem(itemName) {
   const amount = document.getElementById("give-amount").value;
 
   const htmlAdd = `
-  <li>
+  <li  id="${player.name}_card_items_${item.name}">
     <div>
       <p>${item.name}</p>
-      <input type="number" id="${player.name}_card_items_${item.name}">
     </div>
     <div>
       <p style="font-size: 15px">${item.desc}</p>
-      <button class="item-remove-button">Remove</button>
+      <button class="item-remove-button" id="${player.name}_card_items_${item.name}_del" onclick="removePlayerItem('${player.name}', '${item.name}')">Remove</button>
     </div>
   </li>
   `;
 
   //DOM manipulation
-  document
-    .getElementById(`${player.name}_card_items`)
-    .insertAdjacentHTML("afterbegin", htmlAdd);
+  for (let i = 0; i < amount; i++) {
+    document
+      .getElementById(`${player.name}_card_items`)
+      .insertAdjacentHTML("afterbegin", htmlAdd);
 
-  //Local data save
+    players
+      .find((f) => player.name)
+      .inv.push({ name: item.name, desc: item.desc });
+  }
 }
 
 function randomize(maxNum, id) {
@@ -157,7 +164,92 @@ function randomize(maxNum, id) {
   document.getElementById(id).textContent = rnd;
 }
 
-function addMember() {}
+function addMember() {
+  const html = `
+  <div class="char-card" id="${lastIndex}_card">
+    <input type="text" 
+    placeholder="Character name" 
+    class="pc-name"
+    id="${lastIndex}_card_name"
+    onchange="updateName('${lastIndex}')" />
+    <div class="card-line"></div>
+    <p class="card-header">Main info</p>
+    <div class="main-info">
+      <div>
+        <label for="${lastIndex}_card_cur">Currency</label>
+        <input type="number" id="${lastIndex}_card_cur" onchange="updateCur('${lastIndex}')"/>
+      </div>
+      <div>
+        <label for="${lastIndex}_card_lives">Lives</label>
+        <input type="number" id="${lastIndex}_card_lives" value="${defaultLives}" onchange="updateLives('${lastIndex}')"/>
+      </div>
+    </div>
+    <div>
+      <p class="card-header">Inventory</p>
+      <ul class="inventory" id="${lastIndex}_card_items">
+      </ul>
+      <button class="card-delete" onclick="removeMember('${lastIndex}')" id="${lastIndex}_card_delete">DELETE</button>
+    </div>
+  </div>
+  `;
+
+  document
+    .getElementById("card-container")
+    .insertAdjacentHTML("afterbegin", html);
+  players.push({ name: `${lastIndex}`, cur: 0, lives: defaultLives, inv: [] });
+  lastIndex++;
+}
+
+function testUpdateName(target) {
+  if (document.getElementById(`${target}_card_name`).value) {
+    console.log(document.getElementById(`${target}_card_name`).value);
+  }
+}
+
+function updateName(target) {
+  const change = document.getElementById(`${target}_card_name`).value;
+
+  const card = document.getElementById(`${target}_card`);
+  const name = document.getElementById(`${target}_card_name`);
+  const cur = document.getElementById(`${target}_card_cur`);
+  const lives = document.getElementById(`${target}_card_lives`);
+  const inv = document.getElementById(`${target}_card_items`);
+  const del = document.getElementById(`${target}_card_delete`);
+
+  card.id = change;
+  name.id = `${change}_card_name`;
+  name.setAttribute("onchange", updateName(change));
+  cur.id = `${change}_card_cur`;
+  cur.setAttribute("onchange", updateCur(change));
+  lives.id = `${change}_card_lives`;
+  lives.setAttribute("onchange", updateLives(change));
+  inv.id = `${change}_card_items`;
+  del.id = `${change}_card_delete`;
+  del.setAttribute("onclick", removeMember(change));
+
+  players
+    .find((f) => f.name === target)
+    .inv.forEach(function (el) {
+      document.getElementById(
+        `${target}_card_items_${el.name}`
+      ).id = `${change}_card_items_${el.name}`;
+      document.getElementById(
+        `${target}_card_items_${el.name}_del`
+      ).onclick = `removePlayerItem('${change}', '${el.name}')`;
+    });
+
+  players.find((f) => f.name === target).name = change;
+}
+
+function updateCur(target) {
+  const amount = document.getElementById(`${target}_card_cur`).value;
+  players.find((f) => f.name === target).cur = amount;
+}
+
+function updateLives(target) {
+  const amount = document.getElementById(`${target}_card_lives`).value;
+  players.find((f) => f.name === target).lives = amount;
+}
 
 function removeMember(name) {
   document.getElementById(`${name}_card`).remove();
@@ -165,23 +257,20 @@ function removeMember(name) {
   players.splice(players.findIndex((f) => f.name === name));
 }
 
+function removePlayerItem(player, item) {
+  //DOM
+  document.getElementById(`${player}_card_items_${item}`).remove();
+
+  //Array
+  const p = players.find((f) => f.name === player);
+  p.inv.splice(p.inv.findIndex((f) => f.name === item));
+}
+
 function removeItem(name) {
   document.getElementById(`${name}_item`).remove();
 
   items.splice(items.findIndex((f) => f.name === name));
 }
-
-//#region valueUpdate
-
-function changeName(target, value) {
-  players.find((f) => f.name === target).name = value;
-}
-
-function changeCur(target, value) {
-  players.find((f) => f.name === target).name = value;
-}
-
-//#endregion
 
 function addItem() {
   const name = document.getElementById("add-item-name");

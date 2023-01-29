@@ -25,7 +25,7 @@
     <!-- Header controls -->
     <header>
       <button>Save</button>
-      <button>Add new character</button>
+      <button onclick="addMember()">Add new character</button>
     </header>
 
     <!-- Card container -->
@@ -47,14 +47,19 @@
         <div>
           <p class="card-header">Inventory</p>
           <ul class="inventory" id="test_card_items">
-            <li id="test_card_items_item">
+            <li id="test_card_items_testitem">
               <div>
                 <p>Item name</p>
-                <input type="number" />
+                <!-- <input type="number" id="test_card_items_testitem_amount" /> -->
               </div>
               <div>
                 <p style="font-size: 15px">Long ass description goes here</p>
-                <button class="item-remove-button">Remove</button>
+                <button
+                  class="item-remove-button"
+                  onclick="removePlayerItem('test', 'testitem')"
+                >
+                  Remove
+                </button>
               </div>
             </li>
             <li>
@@ -139,7 +144,7 @@
             id="receiver"
             style="width: 120px; height: 20px; margin-bottom: 10px"
           />
-          <input type="number" id="give-amount" />
+          <input type="number" id="give-amount" value="1" />
         </div>
       </div>
     </section>

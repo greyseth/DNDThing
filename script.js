@@ -74,30 +74,34 @@ function createCards() {
     });
 
     const card = `
-    <div class="char-card" id="${el.name}_card">
-        <input type="text" placeholder="Character name" class="pc-name" value="${el.name}" id="${el.name}_card_name"
-        onchange="updateName('${el.name}')"/>
-        <div class="card-line"></div>
-        <p class="card-header">Main info</p>
-        <div class="main-info">
-          <div>
-            <label for="${el.name}_card_cur">Currency</label>
-            <input type="number" id="${el.name}_card_cur" value="${el.cur}" onchange="updateCur('${el.name}')"/>
-          </div>
-          <div>
-            <label for="${el.name}_card_lives">Lives</label>
-            <input type="number" id="${el.name}_card_lives" value="${el.lives}" onchange="updateLives('${el.name}')/>
-          </div>
-        </div>
-        <div>
-          <p class="card-header">Inventory</p>
-          <ul class="inventory" id="${el.name}_card_items">
-            ${itemHTML}
-          </ul>
-          <button class="card-delete" onclick="removeMember('${el.name}')" id="${el.name}_card_delete">DELETE</button>
-        </div>
+  <div class="char-card" id="${el.name}_card">
+    <input type="text" 
+    placeholder="Character name" 
+    class="pc-name"
+    value="${el.name}"
+    id="${el.name}_card_name" />
+    <button onclick="updateName('${el.name}')" id="${el.name}_card_update">S</button>
+    <div class="card-line"></div>
+    <p class="card-header">Main info</p>
+    <div class="main-info">
+      <div>
+        <label for="${el.name}_card_cur">Currency</label>
+        <input type="number" id="${el.name}_card_cur" onchange="updateCur('${el.name}')"/>
       </div>
-    `;
+      <div>
+        <label for="${el.name}_card_lives">Lives</label>
+        <input type="number" id="${el.name}_card_lives" value="${el.lives}" onchange="updateLives('${el.name}')"/>
+      </div>
+    </div>
+    <div>
+      <p class="card-header">Inventory</p>
+      <ul class="inventory" id="${el.name}_card_items">
+        ${itemHTML}
+      </ul>
+      <button class="card-delete" onclick="removeMember('${el.name}')" id="${el.name}_card_delete">DELETE</button>
+    </div>
+  </div>
+  `;
 
     document
       .getElementById("card-container")
@@ -157,6 +161,9 @@ function giveItem(itemName) {
       .find((f) => player.name)
       .inv.push({ name: item.name, desc: item.desc });
   }
+
+  document.getElementById("receiver").value = "";
+  document.getElementById("give-amount").value = 1;
 }
 
 function randomize(maxNum, id) {
@@ -170,8 +177,8 @@ function addMember() {
     <input type="text" 
     placeholder="Character name" 
     class="pc-name"
-    id="${lastIndex}_card_name"
-    onchange="updateName('${lastIndex}')" />
+    id="${lastIndex}_card_name"/>
+    <button onclick="updateName('${el.name}')" id="${lastIndex}_card_update">S</button>
     <div class="card-line"></div>
     <p class="card-header">Main info</p>
     <div class="main-info">
@@ -206,10 +213,16 @@ function testUpdateName(target) {
   }
 }
 
+let isUpdating = false;
 function updateName(target) {
+  if (isUpdating) return;
+
+  isUpdating = true;
+
   const change = document.getElementById(`${target}_card_name`).value;
 
   const card = document.getElementById(`${target}_card`);
+  const update = document.getElementById(`${target}_card_update`);
   const name = document.getElementById(`${target}_card_name`);
   const cur = document.getElementById(`${target}_card_cur`);
   const lives = document.getElementById(`${target}_card_lives`);
@@ -217,15 +230,16 @@ function updateName(target) {
   const del = document.getElementById(`${target}_card_delete`);
 
   card.id = change;
+  update.id = `${change}_card_update`;
+  update.setAttribute("onclick", `updateName('${change}')`);
   name.id = `${change}_card_name`;
-  name.setAttribute("onchange", updateName(change));
   cur.id = `${change}_card_cur`;
-  cur.setAttribute("onchange", updateCur(change));
+  cur.setAttribute("onchange", `updateCur('${change}')`);
   lives.id = `${change}_card_lives`;
-  lives.setAttribute("onchange", updateLives(change));
+  lives.setAttribute("onchange", `updateLives('${change}')`);
   inv.id = `${change}_card_items`;
   del.id = `${change}_card_delete`;
-  del.setAttribute("onclick", removeMember(change));
+  del.setAttribute("onclick", `removeMember('${change}')`);
 
   players
     .find((f) => f.name === target)
@@ -239,6 +253,10 @@ function updateName(target) {
     });
 
   players.find((f) => f.name === target).name = change;
+
+  document.getElementById(`${change}_card_name`).setAttribute("value", change);
+
+  isUpdating = false;
 }
 
 function updateCur(target) {

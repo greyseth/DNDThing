@@ -1,45 +1,29 @@
-let players = [
-  {
-    id: 0,
-    name: "Seth Grayson",
-    cur: 10,
-    lives: 10,
-    inv: ["Id Card", "Sword"],
-  },
-  {
-    id: 1,
-    name: "Ron Corel",
-    cur: 15,
-    lives: 7,
-    inv: ["Id Card", "Sword"],
-  },
-  {
-    id: 2,
-    name: "test",
-    cur: 15,
-    lives: 7,
-    inv: ["Id Card", "Sword"],
-  },
-];
+// let players = [
+//   {
+//     id: 0,
+//     name: "Seth Grayson",
+//     cur: 10,
+//     lives: 10,
+//     inv: ["Id Card", "Sword"],
+//   },
+//   {
+//     id: 1,
+//     name: "Ron Corel",
+//     cur: 15,
+//     lives: 7,
+//     inv: ["Id Card", "Sword"],
+//   },
+//   {
+//     id: 2,
+//     name: "test",
+//     cur: 15,
+//     lives: 7,
+//     inv: ["Id Card", "Sword"],
+//   },
+// ];
 
-let items = [
-  {
-    name: "Flashlight",
-    desc: "This increases the chance to reach a destination safely.",
-  },
-  {
-    name: "Stick",
-    desc: "This is a weapon with a low attack chance.",
-  },
-  {
-    name: "Sword",
-    desc: "This is a weapon with a moderate attack chance.",
-  },
-  {
-    name: "Id Card",
-    desc: "The character's identification card.",
-  },
-];
+let players = [];
+let items = [];
 
 function randomize(maxNum, id) {
   const rnd = Math.floor(Math.random() * maxNum + 1);
@@ -48,6 +32,10 @@ function randomize(maxNum, id) {
 
 const defaultLives = 10;
 let lastIndex = 0;
+for (let i = 0; i < players.length; i++) {
+  if (lastIndex < players[i].id) lastIndex = players[i].id + 1;
+}
+
 function addMember() {
   const html = `
   <div class="char-card" id="${lastIndex}_card">
@@ -149,36 +137,6 @@ function removePlayerItem(target, item) {
   player.inv.splice(player.inv.findIndex((f) => f.name === item));
 }
 
-function testGetPlayer() {
-  // pushPlayer({ id: 3, name: "Man Guy", cur: 10, lives: 5, inv: ["Id Card"] });
-  console.log(players);
-}
-
-// function updateCur(target) {
-//   const amount = document.getElementById(`${target}_card_cur`).value;
-//   players.find((f) => f.name === target).cur = amount;
-// }
-
-// function updateLives(target) {
-//   const amount = document.getElementById(`${target}_card_lives`).value;
-//   players.find((f) => f.name === target).lives = amount;
-// }
-
-// function removeMember(name) {
-//   document.getElementById(`${name}_card`).remove();
-
-//   players.splice(players.findIndex((f) => f.name === name));
-// }
-
-// function removePlayerItem(player, item) {
-//   //DOM
-//   document.getElementById(`${player}_card_items_${item}`).remove();
-
-//   //Array
-//   const p = players.find((f) => f.name === player);
-//   p.inv.splice(p.inv.findIndex((f) => f.name === item));
-// }
-
 //Item functions
 function giveItem(itemTarget) {
   const receiver = document.getElementById(`receiver`);
@@ -208,7 +166,7 @@ function giveItem(itemTarget) {
 function removeItem(name) {
   document.getElementById(`${name}_item`).remove();
 
-  items.splice(items.findIndex((f) => f.name === name));
+  deleteItem(name);
 }
 
 function addItem() {

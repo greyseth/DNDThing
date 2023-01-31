@@ -1,8 +1,20 @@
 import supabase from "./dndb/src/supabase.js";
 
 // Player Management
+async function pushPlayerDB(newData) {
+  const { data, error } = await supabase.from("players").insert([
+    {
+      id: newData.id,
+      name: newData.name,
+      currency: newData.cur,
+      items: newData.inv,
+    },
+  ]);
+}
+
 window.pushPlayer = (data) => {
   players.push(data);
+  pushPlayerDB(data);
 };
 
 window.updatePlayerName = (select, data) => {
@@ -22,54 +34,61 @@ window.deletePlayer = (select) => {
 };
 // Why didnt i just make the same functions inside the other script? hell if i know...
 
-// queryPlayers();
-// async function queryPlayers() {
-//   const { data: users, error } = await supabase.from("players").select("*");
-//   users.map(function (el) {
-//     const toAdd = {
-//       name: el.name,
-//       cur: el.currency,
-//       lives: el.lives,
-//       inv: el.items,
-//     };
-//     players.push(toAdd);
-//   });
-
-//   createCards();
-//   // console.log(players);
-//   // console.log(users);
-
-//   console.log(users);
-//   console.log(players);
-// }
-
-// let items = [
-//   {
-//     name: "Flashlight",
-//     desc: "This increases the chance to reach a destination safely.",
-//   },
-//   {
-//     name: "Stick",
-//     desc: "This is a weapon with a low attack chance.",
-//   },
-//   {
-//     name: "Sword",
-//     desc: "This is a weapon with a moderate attack chance.",
-//   },
-//   {
-//     name: "Id Card",
-//     desc: "The character's identification card.",
-//   },
-// ];
-
 //Item management
+async function pushItemDB(newData) {
+  const { data, error } = await supabase
+    .from("items")
+    .insert([{ name: newData.name, desc: newData.desc }]);
+}
+
 window.pushToItems = (toPush) => {
   items.push(toPush);
+  pushItemDB(toPush);
 };
+
+async function spliceItemDB(toDel) {
+  const { data, error } = await supabase
+    .from("items")
+    .delete()
+    .eq("name", toDel);
+}
 
 window.deleteItem = (select) => {
   items.splice(items.findIndex((f) => f.name === select));
+  spliceItemDB(select);
 };
+
+async function queryPlayers() {
+  const { data: users, error } = await supabase.from("players").select("*");
+  users.map(function (el) {
+    const toAdd = {
+      id: el.id,
+      name: el.name,
+      cur: el.currency,
+      lives: el.lives,
+      inv: el.items,
+    };
+    players.push(toAdd);
+  });
+
+  createCards();
+}
+
+async function queryItems() {
+  const { data, error } = await supabase.from("items").select("*");
+  data.map(function (el) {
+    items.push({
+      name: el.name,
+      desc: el.desc,
+    });
+  });
+
+  createItems();
+
+  await queryPlayers();
+}
+
+queryItems();
 
 function createCards() {
   players.forEach(function (el) {
@@ -131,7 +150,7 @@ function createCards() {
       .insertAdjacentHTML("afterbegin", card);
   });
 }
-createCards();
+// createCards();
 
 function createItems() {
   items.forEach(function (el) {
@@ -151,4 +170,9 @@ function createItems() {
       .insertAdjacentHTML("afterbegin", itemAdd);
   });
 }
-createItems();
+// createItems();
+
+async function updateAll() {
+  const { data: users, error } = await supabase.from("players");
+  players.forEach(function (p) {});
+}

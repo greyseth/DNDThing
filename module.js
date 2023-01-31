@@ -1,25 +1,26 @@
 import supabase from "./dndb/src/supabase.js";
 
-let players = [
-  {
-    name: "Seth Grayson",
-    cur: 10,
-    lives: 10,
-    inv: ["Sword"],
-  },
-  {
-    name: "Ron Corel",
-    cur: 15,
-    lives: 7,
-    inv: ["Sword"],
-  },
-  {
-    name: "test",
-    cur: 15,
-    lives: 7,
-    inv: ["Sword"],
-  },
-];
+// Player Management
+window.pushPlayer = (data) => {
+  players.push(data);
+};
+
+window.updatePlayerName = (select, data) => {
+  players.find((f) => f.id === select).name = data;
+};
+
+window.updatePlayerCur = (select, data) => {
+  players.find((f) => f.id === select).cur = data;
+};
+
+window.updatePlayerLives = (select, data) => {
+  players.find((f) => f.id === select).lives = data;
+};
+
+window.deletePlayer = (select) => {
+  players.splice(players.findIndex((f) => f.id === select));
+};
+// Why didnt i just make the same functions inside the other script? hell if i know...
 
 // queryPlayers();
 // async function queryPlayers() {
@@ -42,27 +43,33 @@ let players = [
 //   console.log(players);
 // }
 
-let items = [
-  {
-    name: "Flashlight",
-    desc: "This increases the chance to reach a destination safely.",
-  },
-  {
-    name: "Stick",
-    desc: "This is a weapon with a low attack chance.",
-  },
-  {
-    name: "Sword",
-    desc: "This is a weapon with a moderate attack chance.",
-  },
-  {
-    name: "Id Card",
-    desc: "The character's identification card.",
-  },
-];
+// let items = [
+//   {
+//     name: "Flashlight",
+//     desc: "This increases the chance to reach a destination safely.",
+//   },
+//   {
+//     name: "Stick",
+//     desc: "This is a weapon with a low attack chance.",
+//   },
+//   {
+//     name: "Sword",
+//     desc: "This is a weapon with a moderate attack chance.",
+//   },
+//   {
+//     name: "Id Card",
+//     desc: "The character's identification card.",
+//   },
+// ];
 
-const defaultLives = 10;
-let lastIndex = 0;
+//Item management
+window.pushToItems = (toPush) => {
+  items.push(toPush);
+};
+
+window.deleteItem = (select) => {
+  items.splice(items.findIndex((f) => f.name === select));
+};
 
 function createCards() {
   players.forEach(function (el) {
@@ -70,7 +77,7 @@ function createCards() {
 
     el.inv.forEach(function (item) {
       let itemAdd = `
-      <li id="${el.name}_card_items_${item}">
+      <li id="${el.id}_card_items_${item}">
           <div>
             <p>${item}</p>
           </div>
@@ -78,10 +85,10 @@ function createCards() {
             <p style="font-size: 15px">${
               items.find((f) => f.name === item).desc
             }</p>
-            <button class="item-remove-button" onclick="removePlayerItem('${
-              el.name
-            }', '${item}')"
-            id="${el.name}_card_items_${item}_del">Remove</button>
+            <button class="item-remove-button" onclick="removePlayerItem(${
+              el.id
+            }, '${item}')"
+            id="${el.id}_card_items_${item}_del">Remove</button>
           </div>
         </li>
       `;
@@ -90,31 +97,31 @@ function createCards() {
     });
 
     const card = `
-  <div class="char-card" id="${el.name}_card">
+  <div class="char-card" id="${el.id}_card">
     <input type="text" 
     placeholder="Character name" 
     class="pc-name"
     value="${el.name}"
-    id="${el.name}_card_name" />
-    <button onclick="updateName('${el.name}')" id="${el.name}_card_update">S</button>
+    id="${el.id}_card_name" />
+    <button onclick="updateName(${el.id})" id="${el.id}_card_update">S</button>
     <div class="card-line"></div>
     <p class="card-header">Main info</p>
     <div class="main-info">
       <div>
-        <label for="${el.name}_card_cur">Currency</label>
-        <input type="number" id="${el.name}_card_cur" onchange="updateCur('${el.name}')"/>
+        <label for="${el.id}_card_cur">Currency</label>
+        <input type="number" id="${el.id}_card_cur" onchange="updateCur(${el.id})"/>
       </div>
       <div>
-        <label for="${el.name}_card_lives">Lives</label>
-        <input type="number" id="${el.name}_card_lives" value="${el.lives}" onchange="updateLives('${el.name}')"/>
+        <label for="${el.id}_card_lives">Lives</label>
+        <input type="number" id="${el.id}_card_lives" value="${el.lives}" onchange="updateLives(${el.id})"/>
       </div>
     </div>
     <div>
       <p class="card-header">Inventory</p>
-      <ul class="inventory" id="${el.name}_card_items">
+      <ul class="inventory" id="${el.id}_card_items">
         ${itemHTML}
       </ul>
-      <button class="card-delete" onclick="removeMember('${el.name}')" id="${el.name}_card_delete">DELETE</button>
+      <button class="card-delete" onclick="removeMember(${el.id})" id="${el.id}_card_delete">DELETE</button>
     </div>
   </div>
   `;
@@ -124,7 +131,6 @@ function createCards() {
       .insertAdjacentHTML("afterbegin", card);
   });
 }
-
 createCards();
 
 function createItems() {

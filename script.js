@@ -1,8 +1,53 @@
+let players = [
+  {
+    id: 0,
+    name: "Seth Grayson",
+    cur: 10,
+    lives: 10,
+    inv: ["Id Card", "Sword"],
+  },
+  {
+    id: 1,
+    name: "Ron Corel",
+    cur: 15,
+    lives: 7,
+    inv: ["Id Card", "Sword"],
+  },
+  {
+    id: 2,
+    name: "test",
+    cur: 15,
+    lives: 7,
+    inv: ["Id Card", "Sword"],
+  },
+];
+
+let items = [
+  {
+    name: "Flashlight",
+    desc: "This increases the chance to reach a destination safely.",
+  },
+  {
+    name: "Stick",
+    desc: "This is a weapon with a low attack chance.",
+  },
+  {
+    name: "Sword",
+    desc: "This is a weapon with a moderate attack chance.",
+  },
+  {
+    name: "Id Card",
+    desc: "The character's identification card.",
+  },
+];
+
 function randomize(maxNum, id) {
   const rnd = Math.floor(Math.random() * maxNum + 1);
   document.getElementById(id).textContent = rnd;
 }
 
+const defaultLives = 10;
+let lastIndex = 0;
 function addMember() {
   const html = `
   <div class="char-card" id="${lastIndex}_card">
@@ -10,13 +55,13 @@ function addMember() {
     placeholder="Character name" 
     class="pc-name"
     id="${lastIndex}_card_name"/>
-    <button onclick="updateName('${lastIndex}')" id="${lastIndex}_card_update">S</button>
+    <button onclick="updateName(${lastIndex})" id="${lastIndex}_card_update">S</button>
     <div class="card-line"></div>
     <p class="card-header">Main info</p>
     <div class="main-info">
       <div>
         <label for="${lastIndex}_card_cur">Currency</label>
-        <input type="number" id="${lastIndex}_card_cur" onchange="updateCur('${lastIndex}')"/>
+        <input type="number" id="${lastIndex}_card_cur" onchange="updateCur(${lastIndex})"/>
       </div>
       <div>
         <label for="${lastIndex}_card_lives">Lives</label>
@@ -34,14 +79,14 @@ function addMember() {
                 <p style="font-size: 15px">The character's identification card.</p>
                 <button
                   class="item-remove-button"
-                  onclick="removePlayerItem('${lastIndex}', 'Id Card')"
+                  onclick="removePlayerItem(${lastIndex}, 'Id Card')"
                 >
                   Remove
                 </button>
               </div>
             </li>
       </ul>
-      <button class="card-delete" onclick="removeMember('${lastIndex}')" id="${lastIndex}_card_delete">DELETE</button>
+      <button class="card-delete" onclick="removeMember(${lastIndex})" id="${lastIndex}_card_delete">DELETE</button>
     </div>
   </div>
   `;
@@ -49,8 +94,15 @@ function addMember() {
   document
     .getElementById("card-container")
     .insertAdjacentHTML("afterbegin", html);
-  players.push({
-    name: `${lastIndex}`,
+  //   players.push({
+  //     name: `${lastIndex}`,
+  //     cur: 0,
+  //     lives: defaultLives,
+  //     inv: ["Id Card"],
+  //   });
+  pushPlayer({
+    id: lastIndex,
+    name: ``,
     cur: 0,
     lives: defaultLives,
     inv: ["Id Card"],
@@ -58,75 +110,99 @@ function addMember() {
   lastIndex++;
 }
 
-let isUpdating = false;
+// let isUpdating = false;
 function updateName(target) {
-  if (isUpdating) return;
-
-  isUpdating = true;
-
-  const change = document.getElementById(`${target}_card_name`).value;
-
-  const card = document.getElementById(`${target}_card`);
-  const update = document.getElementById(`${target}_card_update`);
-  const name = document.getElementById(`${target}_card_name`);
-  const cur = document.getElementById(`${target}_card_cur`);
-  const lives = document.getElementById(`${target}_card_lives`);
-  const inv = document.getElementById(`${target}_card_items`);
-  const del = document.getElementById(`${target}_card_delete`);
-
-  card.id = change;
-  update.id = `${change}_card_update`;
-  update.setAttribute("onclick", `updateName('${change}')`);
-  name.id = `${change}_card_name`;
-  cur.id = `${change}_card_cur`;
-  cur.setAttribute("onchange", `updateCur('${change}')`);
-  lives.id = `${change}_card_lives`;
-  lives.setAttribute("onchange", `updateLives('${change}')`);
-  inv.id = `${change}_card_items`;
-  del.id = `${change}_card_delete`;
-  del.setAttribute("onclick", `removeMember('${change}')`);
-
-  players
-    .find((f) => f.name === target)
-    .inv.forEach(function (el) {
-      document.getElementById(
-        `${target}_card_items_${el.name}`
-      ).id = `${change}_card_items_${el.name}`;
-      document.getElementById(
-        `${target}_card_items_${el.name}_del`
-      ).onclick = `removePlayerItem('${change}', '${el.name}')`;
-    });
-
-  players.find((f) => f.name === target).name = change;
-
-  document.getElementById(`${change}_card_name`).setAttribute("value", change);
-
-  isUpdating = false;
+  updatePlayerName(
+    target,
+    document.getElementById(`${target}_card_name`).value
+  );
 }
 
 function updateCur(target) {
-  const amount = document.getElementById(`${target}_card_cur`).value;
-  players.find((f) => f.name === target).cur = amount;
+  updatePlayerCur(
+    document.getElementById(
+      target,
+      document.getElementById(`${target}_card_cur`).value
+    )
+  );
 }
 
 function updateLives(target) {
-  const amount = document.getElementById(`${target}_card_lives`).value;
-  players.find((f) => f.name === target).lives = amount;
+  updatePlayerLives(
+    document.getElementById(
+      target,
+      document.getElementById(`${target}_card_lives`).value
+    )
+  );
 }
 
-function removeMember(name) {
-  document.getElementById(`${name}_card`).remove();
+function removeMember(target) {
+  document.getElementById(`${target}_card`).remove();
 
-  players.splice(players.findIndex((f) => f.name === name));
+  deletePlayer(target);
 }
 
-function removePlayerItem(player, item) {
-  //DOM
-  document.getElementById(`${player}_card_items_${item}`).remove();
+function removePlayerItem(target, item) {
+  document.getElementById(`${target}_card_items_${item}`).remove();
 
-  //Array
-  const p = players.find((f) => f.name === player);
-  p.inv.splice(p.inv.findIndex((f) => f.name === item));
+  const player = players.find((f) => f.id === target);
+  player.inv.splice(player.inv.findIndex((f) => f.name === item));
+}
+
+function testGetPlayer() {
+  // pushPlayer({ id: 3, name: "Man Guy", cur: 10, lives: 5, inv: ["Id Card"] });
+  console.log(players);
+}
+
+// function updateCur(target) {
+//   const amount = document.getElementById(`${target}_card_cur`).value;
+//   players.find((f) => f.name === target).cur = amount;
+// }
+
+// function updateLives(target) {
+//   const amount = document.getElementById(`${target}_card_lives`).value;
+//   players.find((f) => f.name === target).lives = amount;
+// }
+
+// function removeMember(name) {
+//   document.getElementById(`${name}_card`).remove();
+
+//   players.splice(players.findIndex((f) => f.name === name));
+// }
+
+// function removePlayerItem(player, item) {
+//   //DOM
+//   document.getElementById(`${player}_card_items_${item}`).remove();
+
+//   //Array
+//   const p = players.find((f) => f.name === player);
+//   p.inv.splice(p.inv.findIndex((f) => f.name === item));
+// }
+
+//Item functions
+function giveItem(itemTarget) {
+  const receiver = document.getElementById(`receiver`);
+  const amount = document.getElementById("give-amount");
+  const player = players.find((f) => f.name === receiver.value);
+  const parent = document.getElementById(`${player.id}_card_items`);
+  const item = items.find((f) => f.name === itemTarget);
+  console.log(player.id);
+  const html = `
+  <li id="${player.id}_card_items_${item.name}">
+    <div>
+      <p>${item.name}</p>
+    </div>
+    <div>
+      <p style="font-size: 15px">${item.desc}</p>
+      <button class="item-remove-button" onclick="removePlayerItem(${player.id}, '${item.name}')"
+      id="${player.id}_card_items_${item.name}_del">Remove</button>
+    </div>
+  </li>
+  `;
+
+  for (let i = 0; i < amount.value; i++) {
+    parent.insertAdjacentHTML("afterbegin", html);
+  }
 }
 
 function removeItem(name) {
@@ -154,7 +230,9 @@ function addItem() {
   document.getElementById("item-list").insertAdjacentHTML("afterbegin", html);
 
   //Array modification
-  items.push({ name: name.value, desc: desc.value });
+  //   import {items} from'./module.js';
+  //   items.push({ name: name.value, desc: desc.value });
+  pushToItems({ name: name.value, desc: desc.value });
 
   name.value = "";
   desc.value = "";

@@ -4,7 +4,7 @@ import supabase from "./dndb/src/supabase.js";
 async function pushPlayerDB(newData) {
   const { data, error } = await supabase.from("players").insert([
     {
-      id: newData.id,
+      // id: newData.id,
       name: newData.name,
       currency: newData.cur,
       items: newData.inv,
@@ -15,6 +15,7 @@ async function pushPlayerDB(newData) {
 window.pushPlayer = (data) => {
   players.push(data);
   pushPlayerDB(data);
+  console.log(players);
 };
 
 async function updatePlayerDB(playerId) {
@@ -62,6 +63,13 @@ window.deletePlayer = (select) => {
   deletePlayerDB(select);
 };
 // Why didnt i just make the same functions inside the other script? hell if i know...
+async function testGetPlayersDB() {
+  const { data: users, error } = await supabase.from("players").select("*");
+  console.log(users);
+}
+window.testGetPlayers = () => {
+  testGetPlayersDB();
+};
 
 //Item management
 async function pushItemDB(newData) {
@@ -99,6 +107,10 @@ async function queryPlayers() {
     };
     players.push(toAdd);
   });
+
+  for (let i = 0; i < players.length; i++) {
+    if (lastIndex < players[i].id) lastIndex = players[i].id + 1;
+  }
 
   createCards();
 }

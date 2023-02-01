@@ -32,9 +32,6 @@ function randomize(maxNum, id) {
 
 const defaultLives = 10;
 let lastIndex = 0;
-for (let i = 0; i < players.length; i++) {
-  if (lastIndex < players[i].id) lastIndex = players[i].id + 1;
-}
 
 function addMember() {
   const html = `
@@ -189,4 +186,12 @@ function addItem() {
 
   name.value = "";
   desc.value = "";
+}
+
+function logPlayers() {
+  console.log(players);
+}
+
+function logPlayersDB() {
+  testGetPlayers();
 }

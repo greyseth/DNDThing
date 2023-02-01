@@ -34,57 +34,52 @@ const defaultLives = 10;
 let lastIndex = 0;
 
 function addMember() {
-  const html = `
-  <div class="char-card" id="${lastIndex}_card">
-    <input type="text" 
-    placeholder="Character name" 
-    class="pc-name"
-    id="${lastIndex}_card_name"/>
-    <button onclick="updateName(${lastIndex})" id="${lastIndex}_card_update">S</button>
-    <div class="card-line"></div>
-    <p class="card-header">Main info</p>
-    <div class="main-info">
-      <div>
-        <label for="${lastIndex}_card_cur">Currency</label>
-        <input type="number" id="${lastIndex}_card_cur" onchange="updateCur(${lastIndex})"/>
-      </div>
-      <div>
-        <label for="${lastIndex}_card_lives">Lives</label>
-        <input type="number" id="${lastIndex}_card_lives" value="${defaultLives}" onchange="updateLives('${lastIndex}')"/>
-      </div>
-    </div>
-    <div>
-      <p class="card-header">Inventory</p>
-      <ul class="inventory" id="${lastIndex}_card_items">
-      <li id="${lastIndex}_card_items_Id Card">
-              <div>
-                <p>Id Card</p>
-              </div>
-              <div>
-                <p style="font-size: 15px">The character's identification card.</p>
-                <button
-                  class="item-remove-button"
-                  onclick="removePlayerItem(${lastIndex}, 'Id Card')"
-                >
-                  Remove
-                </button>
-              </div>
-            </li>
-      </ul>
-      <button class="card-delete" onclick="removeMember(${lastIndex})" id="${lastIndex}_card_delete">DELETE</button>
-    </div>
-  </div>
-  `;
+  // const html = `
+  // <div class="char-card" id="${lastIndex}_card">
+  //   <input type="text"
+  //   placeholder="Character name"
+  //   class="pc-name"
+  //   id="${lastIndex}_card_name"/>
+  //   <button onclick="updateName(${lastIndex})" id="${lastIndex}_card_update">S</button>
+  //   <div class="card-line"></div>
+  //   <p class="card-header">Main info</p>
+  //   <div class="main-info">
+  //     <div>
+  //       <label for="${lastIndex}_card_cur">Currency</label>
+  //       <input type="number" id="${lastIndex}_card_cur" onchange="updateCur(${lastIndex})"/>
+  //     </div>
+  //     <div>
+  //       <label for="${lastIndex}_card_lives">Lives</label>
+  //       <input type="number" id="${lastIndex}_card_lives" value="${defaultLives}" onchange="updateLives('${lastIndex}')"/>
+  //     </div>
+  //   </div>
+  //   <div>
+  //     <p class="card-header">Inventory</p>
+  //     <ul class="inventory" id="${lastIndex}_card_items">
+  //     <li id="${lastIndex}_card_items_Id Card">
+  //             <div>
+  //               <p>Id Card</p>
+  //             </div>
+  //             <div>
+  //               <p style="font-size: 15px">The character's identification card.</p>
+  //               <button
+  //                 class="item-remove-button"
+  //                 onclick="removePlayerItem(${lastIndex}, 'Id Card')"
+  //               >
+  //                 Remove
+  //               </button>
+  //             </div>
+  //           </li>
+  //     </ul>
+  //     <button class="card-delete" onclick="removeMember(${lastIndex})" id="${lastIndex}_card_delete">DELETE</button>
+  //   </div>
+  // </div>
+  // `;
 
-  document
-    .getElementById("card-container")
-    .insertAdjacentHTML("afterbegin", html);
-  //   players.push({
-  //     name: `${lastIndex}`,
-  //     cur: 0,
-  //     lives: defaultLives,
-  //     inv: ["Id Card"],
-  //   });
+  // document
+  //   .getElementById("card-container")
+  //   .insertAdjacentHTML("afterbegin", html);
+
   pushPlayer({
     id: lastIndex,
     name: ``,

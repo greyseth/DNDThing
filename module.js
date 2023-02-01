@@ -2,20 +2,76 @@ import supabase from "./dndb/src/supabase.js";
 
 // Player Management
 async function pushPlayerDB(newData) {
-  const { data, error } = await supabase.from("players").insert([
-    {
-      // id: newData.id,
-      name: newData.name,
-      currency: newData.cur,
-      items: newData.inv,
-    },
-  ]);
+  const { data, error } = await supabase
+    .from("players")
+    .insert([
+      {
+        // id: newData.id,
+        name: newData.name,
+        currency: newData.cur,
+        items: newData.inv,
+      },
+    ])
+    .select("*");
+
+  players.push({
+    id: data.id,
+    name: data.name,
+    cur: data.currency,
+    lives: data.lives,
+    inv: data.items,
+  });
+
+  const html = `
+  <div class="char-card" id="${data.id}_card">
+    <input type="text" 
+    placeholder="Character name" 
+    class="pc-name"
+    id="${data.id}_card_name"/>
+    <button onclick="updateName(${data.id})" id="${data.id}_card_update">S</button>
+    <div class="card-line"></div>
+    <p class="card-header">Main info</p>
+    <div class="main-info">
+      <div>
+        <label for="${data.id}_card_cur">Currency</label>
+        <input type="number" id="${data.id}_card_cur" onchange="updateCur(${data.id})"/>
+      </div>
+      <div>
+        <label for="${data.id}_card_lives">Lives</label>
+        <input type="number" id="${data.id}_card_lives" value="${defaultLives}" onchange="updateLives('${lastIndex}')"/>
+      </div>
+    </div>
+    <div>
+      <p class="card-header">Inventory</p>
+      <ul class="inventory" id="${data.id}_card_items">
+      <li id="${data.id}_card_items_Id Card">
+              <div>
+                <p>Id Card</p>
+              </div>
+              <div>
+                <p style="font-size: 15px">The character's identification card.</p>
+                <button
+                  class="item-remove-button"
+                  onclick="removePlayerItem(${data.id}, 'Id Card')"
+                >
+                  Remove
+                </button>
+              </div>
+            </li>
+      </ul>
+      <button class="card-delete" onclick="removeMember(${data.id})" id="${data.id}_card_delete">DELETE</button>
+    </div>
+  </div>
+  `;
+
+  document
+    .getElementById("card-container")
+    .insertAdjacentHTML("afterbegin", html);
 }
 
 window.pushPlayer = (data) => {
-  players.push(data);
   pushPlayerDB(data);
-  console.log(players);
+  // console.log(players);
 };
 
 async function updatePlayerDB(playerId) {
@@ -169,7 +225,7 @@ function createCards() {
     <div class="main-info">
       <div>
         <label for="${el.id}_card_cur">Currency</label>
-        <input type="number" id="${el.id}_card_cur" onchange="updateCur(${el.id})"/>
+        <input type="number" id="${el.id}_card_cur" onchange="updateCur(${el.id})" value="${el.cur}"/>
       </div>
       <div>
         <label for="${el.id}_card_lives">Lives</label>

@@ -29,6 +29,7 @@
     <!-- Header controls -->
     <header>
       <button>Save</button>
+      <h2 id="loadingTxt" hidden="hidden">Loading...</h2>
       <button onclick="addMember()">Add new character</button>
     </header>
 
@@ -117,16 +118,7 @@
       </div>
       <!-- Item list -->
       <div class="item-list-container">
-        <ul class="item-list" id="item-list">
-          <li id="test_item">
-            <p class="item-name">Item name</p>
-            <p>Long ass description goes here</p>
-            <div>
-              <button>Give</button>
-              <button onclick="removeItem('test')">Remove</button>
-            </div>
-          </li>
-        </ul>
+        <ul class="item-list" id="item-list"></ul>
       </div>
     </section>
 

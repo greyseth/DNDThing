@@ -107,21 +107,15 @@ function updateName(target) {
 }
 
 function updateCur(target) {
-  updatePlayerCur(
-    document.getElementById(
-      target,
-      document.getElementById(`${target}_card_cur`).value
-    )
-  );
+  players.find((f) => f.id === target).cur = document.getElementById(
+    `${target}_card_cur`
+  ).value;
 }
 
 function updateLives(target) {
-  updatePlayerLives(
-    document.getElementById(
-      target,
-      document.getElementById(`${target}_card_lives`).value
-    )
-  );
+  players.find((f) => f.id === target).lives = document.getElementById(
+    `${target}_card_lives`
+  ).value;
 }
 
 function removeMember(target) {
@@ -160,6 +154,7 @@ function giveItem(itemTarget) {
 
   for (let i = 0; i < amount.value; i++) {
     parent.insertAdjacentHTML("afterbegin", html);
+    player.inv.push(item.name);
   }
 }
 

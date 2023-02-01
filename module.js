@@ -17,8 +17,29 @@ window.pushPlayer = (data) => {
   pushPlayerDB(data);
 };
 
+async function updatePlayerDB(playerId) {
+  const loadTxt = document.getElementById("loadingTxt");
+  loadTxt.innerHTML = "Loading...";
+  loadTxt.hidden = false;
+
+  const player = players.find((f) => f.id === playerId);
+  const { data: user, error } = await supabase
+    .from("players")
+    .update({
+      name: player.name,
+      currency: player.cur,
+      lives: player.lives,
+      items: player.inv,
+    })
+    .eq("id", player.id);
+
+  loadTxt.innerHTML = "Data saved!";
+  // console.log(user);
+}
+
 window.updatePlayerName = (select, data) => {
   players.find((f) => f.id === select).name = data;
+  updatePlayerDB(select);
 };
 
 window.updatePlayerCur = (select, data) => {
@@ -29,8 +50,16 @@ window.updatePlayerLives = (select, data) => {
   players.find((f) => f.id === select).lives = data;
 };
 
+async function deletePlayerDB(target) {
+  const { data: user, error } = await supabase
+    .from("players")
+    .delete()
+    .eq("id", target);
+}
+
 window.deletePlayer = (select) => {
   players.splice(players.findIndex((f) => f.id === select));
+  deletePlayerDB(select);
 };
 // Why didnt i just make the same functions inside the other script? hell if i know...
 
@@ -171,8 +200,3 @@ function createItems() {
   });
 }
 // createItems();
-
-async function updateAll() {
-  const { data: users, error } = await supabase.from("players");
-  players.forEach(function (p) {});
-}

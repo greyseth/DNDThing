@@ -1,4 +1,4 @@
 # DNDThing
 This is something to keep track of data for a small roleplay.
 
-This is still very much a work in progress, and I've just begun making this.
+The site is pretty much complete now, but the code is very messy...

@@ -30,7 +30,7 @@ function randomize(maxNum, id) {
   document.getElementById(id).textContent = rnd;
 }
 
-const defaultLives = 10;
+const defaultLives = 2;
 let lastIndex = 0;
 
 function addMember() {
